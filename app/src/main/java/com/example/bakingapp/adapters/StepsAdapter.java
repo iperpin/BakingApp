@@ -40,8 +40,8 @@ public class StepsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
         Context context = viewGroup.getContext();
-        int layoutIdForFirstItem = R.layout.list_item_recipe;
-        int layoutIdForListItem = R.layout.list_item_recipe;
+        int layoutIdForFirstItem = R.layout.list_item_ingredient;
+        int layoutIdForListItem = R.layout.list_item_step;
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
 
