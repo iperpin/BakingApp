@@ -1,15 +1,18 @@
 
 package com.example.bakingapp.objects;
 
+import java.util.ArrayList;
 import java.util.List;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+import android.util.Log;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class RecipesObject implements Parcelable
-{
+public class RecipesObject implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -19,10 +22,10 @@ public class RecipesObject implements Parcelable
     private String name;
     @SerializedName("ingredients")
     @Expose
-    private List<Ingredient> ingredients = null;
+    private List<Ingredient> ingredients = new ArrayList<>();
     @SerializedName("steps")
     @Expose
-    private List<Step> steps = null;
+    private List<Step> steps = new ArrayList<>();
     @SerializedName("servings")
     @Expose
     private Integer servings;
@@ -33,7 +36,7 @@ public class RecipesObject implements Parcelable
 
 
         @SuppressWarnings({
-            "unchecked"
+                "unchecked"
         })
         public RecipesObject createFromParcel(Parcel in) {
             return new RecipesObject(in);
@@ -43,8 +46,7 @@ public class RecipesObject implements Parcelable
             return (new RecipesObject[size]);
         }
 
-    }
-    ;
+    };
 
     protected RecipesObject(Parcel in) {
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
@@ -113,10 +115,12 @@ public class RecipesObject implements Parcelable
         dest.writeList(steps);
         dest.writeValue(servings);
         dest.writeValue(image);
+
+        Log.d("RecipesObject",ingredients.toString());
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
     @Override

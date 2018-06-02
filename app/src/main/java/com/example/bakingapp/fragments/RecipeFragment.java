@@ -106,7 +106,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemCl
                 String bodyResponse = response.body().string();
                 final RecipesObject[] movieObjects = Utils.parseRecipesJSON(bodyResponse);
                 final List<RecipesObject> recipesList = new ArrayList<>(Arrays.asList(movieObjects));
-                Log.d(TAG, recipesList.toString());
+                //Log.d(TAG, recipesList.toString());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

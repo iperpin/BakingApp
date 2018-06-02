@@ -19,9 +19,9 @@ import java.util.List;
 
 public class StepsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final String TAG = StepsAdapter.class.getName();
-    private static final int TYPE_FIRST_ITEM = 0;
-    private static final int TYPE_ITEM = 1;
+    private static final String TAG = "StepsAdapter";
+    private static final int INGREDIENTS_ITEM = 0;
+    private static final int STEPS_ITEM = 1;
 
     private ListItemClickListener mOnClickListener;
     private List<Step> steps;
@@ -46,10 +46,10 @@ public class StepsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         boolean shouldAttachToParentImmediately = false;
 
         switch (viewType) {
-            case TYPE_FIRST_ITEM:
+            case INGREDIENTS_ITEM:
                 final View view = inflater.inflate(layoutIdForFirstItem, viewGroup, shouldAttachToParentImmediately);
                 return new IngredientsHolder(view);
-            case TYPE_ITEM:
+            case STEPS_ITEM:
                 final View view2 = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
                 return new StepHolder(view2);
             default:
@@ -59,39 +59,35 @@ public class StepsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        switch (holder.getItemViewType()) {
-            case TYPE_FIRST_ITEM:
-                IngredientsHolder ingredientsHolder = (IngredientsHolder) holder;
-                String ingredient = ingredients.get(position).getIngredient();
-                String quantity = ingredients.get(position).getQuantity()+" "+ingredients.get(position).getMeasure();
-                ingredientsHolder.imageTv.setText(quantity);
-                ingredientsHolder.nameTv.setText(ingredient);
-                break;
-            case TYPE_ITEM:
-                StepHolder stepHolder = (StepHolder) holder;
-                String shortDescription = steps.get(position).getShortDescription();
-                String description = steps.get(position).getShortDescription();
-                stepHolder.imageTv.setText(description);
-                stepHolder.nameTv.setText(shortDescription);
-                break;
+        if (holder instanceof IngredientsHolder) {
+            IngredientsHolder ingredientsHolder = (IngredientsHolder) holder;
+            ingredientsHolder.nameTv.setText("Ingredients");
+            ingredientsHolder.imageTv.setText(ingredients.toString());
+        } else if (holder instanceof StepHolder) {
+            Log.d(TAG,steps.size() + " "+position);
+            StepHolder stepHolder = (StepHolder) holder;
+            String shortDescription = steps.get(position-1).getShortDescription();
+            String description = steps.get(position-1).getDescription();
+            stepHolder.imageTv.setText(description);
+            stepHolder.nameTv.setText(shortDescription);
         }
     }
 
 
+
     @Override
     public int getItemCount() {
-        return steps == null ? 0 : steps.size()+1;
+        return steps == null ? 0 : steps.size() + 1;
     }
 
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
-            return TYPE_FIRST_ITEM;
-        } else return TYPE_ITEM;
+            return INGREDIENTS_ITEM;
+        } else return STEPS_ITEM;
     }
 
     public void updateSteps(List<Step> items) {
-        Log.d(TAG, "Update: " + items.size());
         if (items != null && items.size() > 0) {
             steps.clear();
             steps.addAll(items);
@@ -100,7 +96,6 @@ public class StepsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public void updateIngredients(List<Ingredient> items) {
-        Log.d(TAG, "Update: " + items.size());
         if (items != null && items.size() > 0) {
             ingredients.clear();
             ingredients.addAll(items);
@@ -114,56 +109,43 @@ public class StepsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    public interface ListItemClickListener {
-        void onListItemClick(int clickedItemIndex, Step step);
+public interface ListItemClickListener {
+    void onListItemClick(int clickedItemIndex, Step step);
+}
 
-        void onIngredientsListItemClick(int clickedItemIndex, Ingredient ingredient);
+class IngredientsHolder extends RecyclerView.ViewHolder {
+
+    TextView nameTv;
+    TextView imageTv;
+
+    public IngredientsHolder(View itemView) {
+        super(itemView);
+        nameTv = itemView.findViewById(R.id.author_tv);
+        imageTv = itemView.findViewById(R.id.comment_tv);
     }
 
-    class IngredientsHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener {
+}
 
-        TextView nameTv;
-        TextView imageTv;
+class StepHolder extends RecyclerView.ViewHolder
+        implements View.OnClickListener {
 
-        public IngredientsHolder(View itemView) {
-            super(itemView);
-            nameTv = itemView.findViewById(R.id.author_tv);
-            imageTv = itemView.findViewById(R.id.comment_tv);
-            itemView.setOnClickListener(this);
-        }
+    TextView nameTv;
+    TextView imageTv;
 
-        @Override
-        public void onClick(View view) {
-            int clickedPosition = getAdapterPosition();
-            if (clickedPosition != RecyclerView.NO_POSITION) {
-                Ingredient ingredient = ingredients.get(clickedPosition);
-                mOnClickListener.onIngredientsListItemClick(clickedPosition, ingredient);
-            }
-
-        }
+    public StepHolder(View itemView) {
+        super(itemView);
+        nameTv = itemView.findViewById(R.id.author_tv);
+        imageTv = itemView.findViewById(R.id.comment_tv);
+        itemView.setOnClickListener(this);
     }
 
-    class StepHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener {
-
-        TextView nameTv;
-        TextView imageTv;
-
-        public StepHolder(View itemView) {
-            super(itemView);
-            nameTv = itemView.findViewById(R.id.author_tv);
-            imageTv = itemView.findViewById(R.id.comment_tv);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            int clickedPosition = getAdapterPosition();
-            if (clickedPosition != RecyclerView.NO_POSITION) {
-                Step step = steps.get(clickedPosition);
-                mOnClickListener.onListItemClick(clickedPosition, step);
-            }
+    @Override
+    public void onClick(View view) {
+        int clickedPosition = getAdapterPosition();
+        if (clickedPosition != RecyclerView.NO_POSITION) {
+            Step step = steps.get(clickedPosition-1);
+            mOnClickListener.onListItemClick(clickedPosition-1, step);
         }
     }
+}
 }
