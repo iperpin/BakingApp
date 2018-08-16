@@ -4,9 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <fragment
+    <FrameLayout
         android:id="@+id/steps_fragment"
-        android:name="com.example.bakingapp.fragments.StepsFragment"
         android:layout_width="400dp"
         android:layout_height="match_parent" />
 

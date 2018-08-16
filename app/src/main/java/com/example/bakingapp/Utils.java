@@ -2,6 +2,7 @@ package com.example.bakingapp;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.util.Log;
 
 import com.example.bakingapp.objects.Ingredient;
 import com.example.bakingapp.objects.RecipesObject;
@@ -22,10 +23,31 @@ public class Utils {
         return recipes;
     }
 
+    public static Ingredient[] parseIngredientsJSON(String json) {
+        Gson gson = new Gson();
+        Log.d("UTILS",json);
+        Ingredient[] recipes = gson.fromJson(json, Ingredient[].class);
+        return recipes;
+    }
+
+    public static String parseJSONIngredients(List<Ingredient> ingredients) {
+        Gson gson = new Gson();
+        String recipes = gson.toJson(ingredients);
+        return recipes;
+    }
+
+    public static String ucFirst(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        } else {
+            return str.substring(0, 1).toUpperCase() + str.substring(1);
+        }
+    }
+
     public static String createIngredientsList(List<Ingredient> ingredients) {
         String concatIngredients = "";
         for (int i = 0; i < ingredients.size(); i++) {
-            concatIngredients += ingredients.get(i).getIngredient() + " - " + ingredients.get(i).getQuantity() + " " + ingredients.get(i).getMeasure() + "\n";
+            concatIngredients += Utils.ucFirst(ingredients.get(i).getIngredient()) + " - " + ingredients.get(i).getQuantity() + " " + ingredients.get(i).getMeasure() + "\n";
         }
         return concatIngredients;
     }

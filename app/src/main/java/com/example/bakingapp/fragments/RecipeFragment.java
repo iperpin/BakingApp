@@ -116,7 +116,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemCl
                 final RecipesObject[] recipeObjects = Utils.parseRecipesJSON(bodyResponse);
                 final List<RecipesObject> recipesList = new ArrayList<>(Arrays.asList(recipeObjects));
                 //Log.d(TAG, recipesList.toString());
-                updtateIngredientsWidget(recipesList.get(0).getIngredients());
+                updtateIngredientsWidget(Utils.parseJSONIngredients(recipesList.get(0).getIngredients()));
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -136,11 +136,11 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemCl
         noInternetTextView.setVisibility(View.VISIBLE);
     }
 
-    private void updtateIngredientsWidget(List<Ingredient> ingredients) {
+    private void updtateIngredientsWidget(String ingredients) {
         SharedPreferences.Editor editor = this.getActivity().
                 getSharedPreferences(this.getActivity().
                         getString(R.string.prefs), Context.MODE_PRIVATE).edit();
-        editor.putString("Ingredients", Utils.createIngredientsList(ingredients));
+        editor.putString("Ingredients", ingredients);
         editor.apply();
     }
 
