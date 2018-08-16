@@ -25,11 +25,11 @@ public class StepsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private ListItemClickListener mOnClickListener;
     private List<Step> steps;
-    private List<Ingredient> ingredients;
+    private String ingredients;
 
     public StepsAdapter() {
         steps = new ArrayList<>();
-        ingredients = new ArrayList<>();
+        //ingredients = new ArrayList<>();
     }
 
     public void setClickListener(ListItemClickListener itemClickListener) {
@@ -95,17 +95,19 @@ public class StepsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
-    public void updateIngredients(List<Ingredient> items) {
-        if (items != null && items.size() > 0) {
-            ingredients.clear();
-            ingredients.addAll(items);
+    public void updateIngredients(String items) {
+       // if (items != null && items.size() > 0) {
+           // ingredients.clear();
+           // ingredients.addAll(items);
+            ingredients=items;
             notifyDataSetChanged();
-        }
+       // }
     }
 
     public void clear() {
         steps.clear();
-        ingredients.clear();
+        ingredients="";
+        //ingredients.clear();
         notifyDataSetChanged();
     }
 

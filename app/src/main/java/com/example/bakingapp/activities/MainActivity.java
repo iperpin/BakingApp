@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         RecipeFragment recipeFragment = new RecipeFragment();
         fragmentManager.beginTransaction()
-                .add(R.id.master_fragment, recipeFragment).commit();
+                .add(R.id.main_fragment, recipeFragment).commit();
     }
 
 

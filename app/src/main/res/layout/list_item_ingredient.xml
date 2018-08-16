@@ -10,16 +10,14 @@
         android:id="@+id/author_tv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/medium_margin"
+        android:layout_margin="@dimen/small_margin"
         android:textStyle="bold"
-        android:text="Example text"
         android:textColor="@color/colorPrimaryDark" />
 
     <TextView
         android:id="@+id/comment_tv"
-        android:layout_margin="@dimen/medium_margin"
+        android:layout_margin="@dimen/small_margin"
         android:textColor="@color/colorPrimaryDark"
-        android:text="example text 2"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -3,13 +3,13 @@ package com.example.bakingapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.example.bakingapp.R;
-import com.example.bakingapp.fragments.RecipeFragment;
 import com.example.bakingapp.fragments.VideoFragment;
-import com.example.bakingapp.objects.RecipesObject;
 import com.example.bakingapp.objects.Step;
 
 import butterknife.ButterKnife;
@@ -37,14 +37,26 @@ public class VideoActivity extends AppCompatActivity {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 getSupportActionBar().setTitle(step.getShortDescription());
             }
+
             Bundle bundle = new Bundle();
             bundle.putParcelable(getString(R.string.intent_step_object), step);
             VideoFragment videoFragment = new VideoFragment();
             videoFragment.setArguments(bundle);
             fragmentManager.beginTransaction()
-                    .add(R.id.master_fragment, videoFragment).commit();
+                    .replace(R.id.video_fragment, videoFragment).commit();
         }
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

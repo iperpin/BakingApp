@@ -7,4 +7,7 @@
     <string name="no_internet">No internet connexion.\nSwipe down to retry </string>
     <string name="intent_recipe_object">RecipeObjectIntent</string>
     <string name="intent_step_object">StepObjectIntent</string>
+    <string name="appwidgettext">Ingredients</string>
+    <string name="add_widget">Add widget</string>
+    <string name="prefs">Prefs</string>
 </resources>

@@ -1,11 +1,10 @@
 package com.example.bakingapp.fragments;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,9 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.bakingapp.R;
-import com.example.bakingapp.activities.StepsActivity;
-import com.example.bakingapp.activities.VideoActivity;
-import com.example.bakingapp.adapters.RecipeAdapter;
+import com.example.bakingapp.Utils;
 import com.example.bakingapp.adapters.StepsAdapter;
 import com.example.bakingapp.objects.Ingredient;
 import com.example.bakingapp.objects.RecipesObject;
@@ -39,6 +36,8 @@ public class StepsFragment extends Fragment implements StepsAdapter.ListItemClic
 
     StepsAdapter stepsAdapter;
 
+    private StepClickListener stepListener;
+
     public StepsFragment() {
 
     }
@@ -52,9 +51,16 @@ public class StepsFragment extends Fragment implements StepsAdapter.ListItemClic
 
         ButterKnife.bind(this, view);
 
-        RecipesObject recipe = getArguments().getParcelable(getString(R.string.intent_recipe_object));
+        String ingredientsList = "";
+        RecipesObject recipe = null;
+        if (getArguments() != null) {
+            if (getArguments().getParcelable(getString(R.string.intent_recipe_object)) != null) {
+                recipe = getArguments().getParcelable(getString(R.string.intent_recipe_object));
 
-        String ingredientsList = createIngredientsList(recipe.getIngredients());
+                ingredientsList = Utils.createIngredientsList(recipe.getIngredients());
+            }
+        }
+
         Log.d(TAG, ingredientsList);
 
         recyclerView.setHasFixedSize(true);
@@ -63,25 +69,31 @@ public class StepsFragment extends Fragment implements StepsAdapter.ListItemClic
         recyclerView.setAdapter(stepsAdapter);
         stepsAdapter.setClickListener(this);
 
-        stepsAdapter.updateIngredients(recipe.getIngredients());
-        stepsAdapter.updateSteps(recipe.getSteps());
+        stepsAdapter.updateIngredients(ingredientsList);
+        if (recipe != null) {
+            stepsAdapter.updateSteps(recipe.getSteps());
+        }
 
         return view;
     }
 
-    private String createIngredientsList(List<Ingredient> ingredients) {
-        String concatIngredients = "";
-        for (int i = 0; i < ingredients.size(); i++) {
-            concatIngredients += ingredients.get(i).getIngredient() + " - " + ingredients.get(i).getQuantity() + " " + ingredients.get(i).getMeasure() + "\n";
-        }
-        return concatIngredients;
-    }
 
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        stepListener = (StepClickListener) context;
+    }
+
+    @Override
     public void onListItemClick(int clickedItemIndex, Step step) {
-        Intent intent = new Intent(getContext(), VideoActivity.class);
-        intent.putExtra(getString(R.string.intent_step_object), step);
-        startActivity(intent);
+//        Intent intent = new Intent(getContext(), VideoActivity.class);
+//        intent.putExtra(getString(R.string.intent_step_object), step);
+//        startActivity(intent);
+        stepListener.onStepClickListener(step);
+    }
+
+    public interface StepClickListener {
+        void onStepClickListener(Step step);
     }
 }

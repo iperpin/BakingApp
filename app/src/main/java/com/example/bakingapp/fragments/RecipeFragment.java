@@ -1,6 +1,8 @@
 package com.example.bakingapp.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.example.bakingapp.R;
 import com.example.bakingapp.Utils;
 import com.example.bakingapp.activities.StepsActivity;
 import com.example.bakingapp.adapters.RecipeAdapter;
+import com.example.bakingapp.objects.Ingredient;
 import com.example.bakingapp.objects.RecipesObject;
 
 import java.io.IOException;
@@ -46,6 +48,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemCl
 
     RecipeAdapter recipeAdapter;
 
+
     public RecipeFragment() {
 
     }
@@ -57,9 +60,15 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemCl
         View view = inflater.inflate(
                 R.layout.fragment_recipe, container, false);
 
+        boolean isPhone = getResources().getBoolean(R.bool.is_phone);
+
         ButterKnife.bind(this, view);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), 1));
+        if (isPhone) {
+            recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), 1));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), 3));
+        }
         recipeAdapter = new RecipeAdapter();
         recyclerView.setAdapter(recipeAdapter);
         recipeAdapter.setClickListener(this);
@@ -96,7 +105,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemCl
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                         setNoInternetTextView();
+                        setNoInternetTextView();
                     }
                 });
             }
@@ -104,9 +113,10 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemCl
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 String bodyResponse = response.body().string();
-                final RecipesObject[] movieObjects = Utils.parseRecipesJSON(bodyResponse);
-                final List<RecipesObject> recipesList = new ArrayList<>(Arrays.asList(movieObjects));
+                final RecipesObject[] recipeObjects = Utils.parseRecipesJSON(bodyResponse);
+                final List<RecipesObject> recipesList = new ArrayList<>(Arrays.asList(recipeObjects));
                 //Log.d(TAG, recipesList.toString());
+                updtateIngredientsWidget(recipesList.get(0).getIngredients());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -124,6 +134,14 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemCl
         recipeAdapter.clear();
         noInternetTextView.setText(getString(R.string.no_internet));
         noInternetTextView.setVisibility(View.VISIBLE);
+    }
+
+    private void updtateIngredientsWidget(List<Ingredient> ingredients) {
+        SharedPreferences.Editor editor = this.getActivity().
+                getSharedPreferences(this.getActivity().
+                        getString(R.string.prefs), Context.MODE_PRIVATE).edit();
+        editor.putString("Ingredients", Utils.createIngredientsList(ingredients));
+        editor.apply();
     }
 
     @Override
