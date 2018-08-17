@@ -22,9 +22,6 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = getIngredientsGridRemoteView(context);
 
-        //views.setTextViewText(R.id.appwidget_text, ingredients);
-        //getIngredientsGridRemoteView(context);
-
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
@@ -49,10 +46,6 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
-       // SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.prefs), Context.MODE_PRIVATE);
-       // String ingredients = prefs.getString("Ingredients", "");
-       // updateIngredientsWidget(context, appWidgetManager, appWidgetIds);
 
         IngredientsShowingService.startActionUpdateIngredients(context);
     }

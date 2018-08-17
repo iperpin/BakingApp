@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.bakingapp.R;
 import com.example.bakingapp.objects.Step;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -36,13 +36,13 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class VideoFragment extends Fragment implements Player.EventListener {
 
     private static final String TAG = "VideoFragment";
+    private static final String VIDEO_POSITION = "VIDEO_POSITION";
 
     @BindView(R.id.video_player)
     PlayerView playerView;
@@ -53,6 +53,8 @@ public class VideoFragment extends Fragment implements Player.EventListener {
     private Uri videoUrl;
     private MediaSessionCompat mediaSession;
     private PlaybackStateCompat.Builder stateBuilder;
+    private static long currentVideoPos;
+    private static boolean initialize=false;
 
     public VideoFragment() {
 
@@ -61,6 +63,7 @@ public class VideoFragment extends Fragment implements Player.EventListener {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putLong(VIDEO_POSITION, currentVideoPos);
     }
 
     @Nullable
@@ -72,15 +75,20 @@ public class VideoFragment extends Fragment implements Player.EventListener {
 
         ButterKnife.bind(this, view);
 
+        if (savedInstanceState != null) {
+            currentVideoPos = savedInstanceState.getLong(VIDEO_POSITION, C.TIME_UNSET);
+        }
+
         Step step = getArguments().getParcelable(getString(R.string.intent_step_object));
+        initialize = getArguments().getBoolean(getString(R.string.initialize),false);
         stepTextView.setText(step.getDescription());
-        Log.d(TAG, step.getVideoURL());
+
         videoUrl = Uri.parse(step.getVideoURL());
 
-        if (step.getVideoURL().equalsIgnoreCase("")){
+        if (step.getVideoURL().equalsIgnoreCase("")) {
             playerView.setVisibility(View.GONE);
             playerView.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_image_grey600_48dp));
-        }else {
+        } else {
             playerView.setVisibility(View.VISIBLE);
 
         }
@@ -90,20 +98,30 @@ public class VideoFragment extends Fragment implements Player.EventListener {
 
 
     private void initializePlayer() {
+
         initializeMediaSession();
 
         TrackSelector trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
         player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(getContext()),
                 trackSelector, loadControl);
-        playerView.setPlayer(player);
         player.addListener(this);
+        playerView.setPlayer(player);
+
 
         String userAgent = Util.getUserAgent(getContext(), getString(R.string.app_name));
         MediaSource mediaSource = new ExtractorMediaSource(videoUrl, new DefaultDataSourceFactory(
                 getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
         player.prepare(mediaSource);
+
+        if (currentVideoPos != C.TIME_UNSET && initialize==false) {
+            player.seekTo(currentVideoPos);
+        }
+
+
         player.setPlayWhenReady(true);
+
+
     }
 
     private void initializeMediaSession() {
@@ -196,13 +214,15 @@ public class VideoFragment extends Fragment implements Player.EventListener {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume");
         initializePlayer();
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        if (player != null) {
+            currentVideoPos = player.getCurrentPosition();
+        }
         releasePlayer();
     }
 

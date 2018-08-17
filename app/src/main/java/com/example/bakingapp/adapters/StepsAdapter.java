@@ -3,14 +3,12 @@ package com.example.bakingapp.adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.bakingapp.R;
-import com.example.bakingapp.objects.Ingredient;
 import com.example.bakingapp.objects.Step;
 
 import java.util.ArrayList;
@@ -26,10 +24,10 @@ public class StepsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private ListItemClickListener mOnClickListener;
     private List<Step> steps;
     private String ingredients;
+    private Context context;
 
     public StepsAdapter() {
         steps = new ArrayList<>();
-        //ingredients = new ArrayList<>();
     }
 
     public void setClickListener(ListItemClickListener itemClickListener) {
@@ -39,7 +37,7 @@ public class StepsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
-        Context context = viewGroup.getContext();
+        context = viewGroup.getContext();
         int layoutIdForFirstItem = R.layout.list_item_ingredient;
         int layoutIdForListItem = R.layout.list_item_step;
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -61,15 +59,14 @@ public class StepsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof IngredientsHolder) {
             IngredientsHolder ingredientsHolder = (IngredientsHolder) holder;
-            ingredientsHolder.nameTv.setText("Ingredients");
-            ingredientsHolder.imageTv.setText(ingredients.toString());
+            ingredientsHolder.ingredientsTagTv.setText(context.getString(R.string.ingredients));
+            ingredientsHolder.ingredientsListTv.setText(ingredients.toString());
         } else if (holder instanceof StepHolder) {
-            Log.d(TAG,steps.size() + " "+position);
             StepHolder stepHolder = (StepHolder) holder;
             String shortDescription = steps.get(position-1).getShortDescription();
             String description = steps.get(position-1).getDescription();
-            stepHolder.imageTv.setText(description);
-            stepHolder.nameTv.setText(shortDescription);
+            stepHolder.stepDescTv.setText(description);
+            stepHolder.stepResumeTv.setText(shortDescription);
         }
     }
 
@@ -96,18 +93,13 @@ public class StepsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public void updateIngredients(String items) {
-       // if (items != null && items.size() > 0) {
-           // ingredients.clear();
-           // ingredients.addAll(items);
             ingredients=items;
             notifyDataSetChanged();
-       // }
     }
 
     public void clear() {
         steps.clear();
         ingredients="";
-        //ingredients.clear();
         notifyDataSetChanged();
     }
 
@@ -117,13 +109,13 @@ public interface ListItemClickListener {
 
 class IngredientsHolder extends RecyclerView.ViewHolder {
 
-    TextView nameTv;
-    TextView imageTv;
+    TextView ingredientsTagTv;
+    TextView ingredientsListTv;
 
     public IngredientsHolder(View itemView) {
         super(itemView);
-        nameTv = itemView.findViewById(R.id.author_tv);
-        imageTv = itemView.findViewById(R.id.comment_tv);
+        ingredientsTagTv = itemView.findViewById(R.id.ingredient_tag_tv);
+        ingredientsListTv = itemView.findViewById(R.id.ingredient_list_tv);
     }
 
 }
@@ -131,13 +123,13 @@ class IngredientsHolder extends RecyclerView.ViewHolder {
 class StepHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener {
 
-    TextView nameTv;
-    TextView imageTv;
+    TextView stepResumeTv;
+    TextView stepDescTv;
 
     public StepHolder(View itemView) {
         super(itemView);
-        nameTv = itemView.findViewById(R.id.author_tv);
-        imageTv = itemView.findViewById(R.id.comment_tv);
+        stepResumeTv = itemView.findViewById(R.id.step_resume_tv);
+        stepDescTv = itemView.findViewById(R.id.step_desc_tv);
         itemView.setOnClickListener(this);
     }
 

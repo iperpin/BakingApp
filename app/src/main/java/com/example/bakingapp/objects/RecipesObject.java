@@ -116,7 +116,6 @@ public class RecipesObject implements Parcelable {
         dest.writeValue(servings);
         dest.writeValue(image);
 
-        Log.d("RecipesObject",ingredients.toString());
     }
 
     public int describeContents() {

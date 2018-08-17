@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.bakingapp.R;
@@ -12,6 +13,7 @@ import com.example.bakingapp.fragments.StepsFragment;
 import com.example.bakingapp.fragments.VideoFragment;
 import com.example.bakingapp.objects.RecipesObject;
 import com.example.bakingapp.objects.Step;
+import com.google.android.exoplayer2.C;
 
 import butterknife.ButterKnife;
 
@@ -68,6 +70,7 @@ public class StepsActivity extends AppCompatActivity implements StepsFragment.St
     private void updateVideoFragment(Step step) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(getString(R.string.intent_step_object), step);
+        bundle.putBoolean(getString(R.string.initialize),true);
         VideoFragment videoFragment = new VideoFragment();
         videoFragment.setArguments(bundle);
         fragmentManager.beginTransaction()

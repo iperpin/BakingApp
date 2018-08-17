@@ -25,7 +25,6 @@ public class Utils {
 
     public static Ingredient[] parseIngredientsJSON(String json) {
         Gson gson = new Gson();
-        Log.d("UTILS",json);
         Ingredient[] recipes = gson.fromJson(json, Ingredient[].class);
         return recipes;
     }

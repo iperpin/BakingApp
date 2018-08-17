@@ -2,7 +2,6 @@ package com.example.bakingapp.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,9 +46,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
     public void onBindViewHolder(RecipeHolder holder, int position) {
         String name = recipes.get(position).getName();
         String image = recipes.get(position).getImage();
-        Log.d(TAG, name + " " + image);
-        holder.imageTv.setText(image);
-        holder.nameTv.setText(name);
+        holder.recipeImageTv.setText(image);
+        holder.recipeNameTv.setText(name);
     }
 
 
@@ -60,7 +58,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
 
 
     public void update(List<RecipesObject> items) {
-        Log.d(TAG,"Update: "+ items.size());
         if (items != null && items.size() > 0) {
             recipes.clear();
             recipes.addAll(items);
@@ -80,13 +77,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
     class RecipeHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
-        TextView nameTv;
-        TextView imageTv;
+        TextView recipeNameTv;
+        TextView recipeImageTv;
 
         public RecipeHolder(View itemView) {
             super(itemView);
-            nameTv = itemView.findViewById(R.id.author_tv);
-            imageTv = itemView.findViewById(R.id.comment_tv);
+            recipeNameTv = itemView.findViewById(R.id.recipe_name_tv);
+            recipeImageTv = itemView.findViewById(R.id.recipe_image_tv);
             itemView.setOnClickListener(this);
         }
 

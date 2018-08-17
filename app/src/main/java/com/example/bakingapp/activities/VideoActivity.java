@@ -31,7 +31,6 @@ public class VideoActivity extends AppCompatActivity {
         Intent i = getIntent();
         if (i != null && i.hasExtra(getString(R.string.intent_step_object))) {
             Step step = i.getParcelableExtra(getString(R.string.intent_step_object));
-            Log.d(TAG, step.toString());
 
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);

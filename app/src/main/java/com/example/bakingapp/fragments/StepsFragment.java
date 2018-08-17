@@ -29,10 +29,8 @@ import butterknife.ButterKnife;
 public class StepsFragment extends Fragment implements StepsAdapter.ListItemClickListener {
 
     private static final String TAG = "StepsFragment";
-    @BindView(R.id.rv)
+    @BindView(R.id.rv_steps)
     RecyclerView recyclerView;
-    @BindView(R.id.tv_no_internet)
-    TextView noInternetTextView;
 
     StepsAdapter stepsAdapter;
 
@@ -60,8 +58,6 @@ public class StepsFragment extends Fragment implements StepsAdapter.ListItemClic
                 ingredientsList = Utils.createIngredientsList(recipe.getIngredients());
             }
         }
-
-        Log.d(TAG, ingredientsList);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), 1));

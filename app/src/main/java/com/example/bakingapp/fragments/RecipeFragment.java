@@ -19,7 +19,6 @@ import com.example.bakingapp.R;
 import com.example.bakingapp.Utils;
 import com.example.bakingapp.activities.StepsActivity;
 import com.example.bakingapp.adapters.RecipeAdapter;
-import com.example.bakingapp.objects.Ingredient;
 import com.example.bakingapp.objects.RecipesObject;
 
 import java.io.IOException;
@@ -39,7 +38,7 @@ import okhttp3.Response;
 public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemClickListener {
 
     private static final String TAG = "RecipeFragment";
-    @BindView(R.id.rv)
+    @BindView(R.id.rv_recipes)
     RecyclerView recyclerView;
     @BindView(R.id.swipe_layout)
     SwipeRefreshLayout swipeLayout;
@@ -60,15 +59,19 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemCl
         View view = inflater.inflate(
                 R.layout.fragment_recipe, container, false);
 
+        ButterKnife.bind(this, view);
+
         boolean isPhone = getResources().getBoolean(R.bool.is_phone);
 
-        ButterKnife.bind(this, view);
-        recyclerView.setHasFixedSize(true);
+
+
         if (isPhone) {
             recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), 1));
         } else {
             recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), 3));
         }
+        recyclerView.setHasFixedSize(true);
+
         recipeAdapter = new RecipeAdapter();
         recyclerView.setAdapter(recipeAdapter);
         recipeAdapter.setClickListener(this);
@@ -115,7 +118,6 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemCl
                 String bodyResponse = response.body().string();
                 final RecipesObject[] recipeObjects = Utils.parseRecipesJSON(bodyResponse);
                 final List<RecipesObject> recipesList = new ArrayList<>(Arrays.asList(recipeObjects));
-                //Log.d(TAG, recipesList.toString());
                 updtateIngredientsWidget(Utils.parseJSONIngredients(recipesList.get(0).getIngredients()));
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -140,7 +142,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemCl
         SharedPreferences.Editor editor = this.getActivity().
                 getSharedPreferences(this.getActivity().
                         getString(R.string.prefs), Context.MODE_PRIVATE).edit();
-        editor.putString("Ingredients", ingredients);
+        editor.putString(getString(R.string.ingredients), ingredients);
         editor.apply();
     }
 

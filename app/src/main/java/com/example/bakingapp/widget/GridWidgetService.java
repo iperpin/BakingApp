@@ -35,7 +35,7 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     @Override
     public void onDataSetChanged() {
         SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.prefs), Context.MODE_PRIVATE);
-        String ingredients = prefs.getString("Ingredients", "");
+        String ingredients = prefs.getString(context.getString(R.string.ingredients), "");
         if (ingredients!=null && !ingredients.equalsIgnoreCase("")) {
             Ingredient[] ingredientsList = Utils.parseIngredientsJSON(ingredients);
             this.ingredientsList = ingredientsList;
