@@ -2,7 +2,6 @@ package com.example.bakingapp;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.util.Log;
 
 import com.example.bakingapp.objects.Ingredient;
 import com.example.bakingapp.objects.RecipesObject;

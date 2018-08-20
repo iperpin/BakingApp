@@ -11,7 +11,7 @@ import android.support.annotation.Nullable;
 
 import com.example.bakingapp.R;
 
-public class IngredientsShowingService extends IntentService{
+public class IngredientsShowingService extends IntentService {
 
 
     private static final String UPDATE_INGREDIENTS = "com.example.bakingapp.action.update_ingredients";
@@ -54,8 +54,6 @@ public class IngredientsShowingService extends IntentService{
         widgetManager.notifyAppWidgetViewDataChanged(widgetsIds, R.id.widget_grid_view);
         RecipeWidgetProvider.updateIngredientsWidget(this, widgetManager, widgetsIds);
     }
-
-
 
 
 }

@@ -45,8 +45,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
     @Override
     public void onBindViewHolder(RecipeHolder holder, int position) {
         String name = recipes.get(position).getName();
-        String image = recipes.get(position).getImage();
-        holder.recipeImageTv.setText(image);
         holder.recipeNameTv.setText(name);
     }
 
@@ -78,12 +76,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
             implements View.OnClickListener {
 
         TextView recipeNameTv;
-        TextView recipeImageTv;
 
         public RecipeHolder(View itemView) {
             super(itemView);
             recipeNameTv = itemView.findViewById(R.id.recipe_name_tv);
-            recipeImageTv = itemView.findViewById(R.id.recipe_image_tv);
             itemView.setOnClickListener(this);
         }
 

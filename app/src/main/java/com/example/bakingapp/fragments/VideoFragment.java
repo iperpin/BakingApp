@@ -54,7 +54,7 @@ public class VideoFragment extends Fragment implements Player.EventListener {
     private MediaSessionCompat mediaSession;
     private PlaybackStateCompat.Builder stateBuilder;
     private static long currentVideoPos;
-    private static boolean initialize=false;
+    private static boolean initialize = false;
 
     public VideoFragment() {
 
@@ -80,7 +80,7 @@ public class VideoFragment extends Fragment implements Player.EventListener {
         }
 
         Step step = getArguments().getParcelable(getString(R.string.intent_step_object));
-        initialize = getArguments().getBoolean(getString(R.string.initialize),false);
+        initialize = getArguments().getBoolean(getString(R.string.initialize), false);
         stepTextView.setText(step.getDescription());
 
         videoUrl = Uri.parse(step.getVideoURL());
@@ -114,7 +114,7 @@ public class VideoFragment extends Fragment implements Player.EventListener {
                 getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
         player.prepare(mediaSource);
 
-        if (currentVideoPos != C.TIME_UNSET && initialize==false) {
+        if (currentVideoPos != C.TIME_UNSET && initialize == false) {
             player.seekTo(currentVideoPos);
         }
 
