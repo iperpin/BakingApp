@@ -16,9 +16,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -26,6 +28,4 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .add(R.id.recipe_fragment, recipeFragment).commit();
     }
-
-
 }

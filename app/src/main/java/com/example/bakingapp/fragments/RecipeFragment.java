@@ -1,9 +1,9 @@
 package com.example.bakingapp.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -46,6 +46,8 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemCl
     TextView noInternetTextView;
 
     RecipeAdapter recipeAdapter;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
 
     public RecipeFragment() {
@@ -61,8 +63,11 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemCl
 
         ButterKnife.bind(this, view);
 
-        boolean isPhone = getResources().getBoolean(R.bool.is_phone);
+        sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(getActivity());
+        editor = sharedPreferences.edit();
 
+        boolean isPhone = getResources().getBoolean(R.bool.is_phone);
 
 
         if (isPhone) {
@@ -118,12 +123,15 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemCl
                 String bodyResponse = response.body().string();
                 final RecipesObject[] recipeObjects = Utils.parseRecipesJSON(bodyResponse);
                 final List<RecipesObject> recipesList = new ArrayList<>(Arrays.asList(recipeObjects));
-                updtateIngredientsWidget(Utils.parseJSONIngredients(recipesList.get(0).getIngredients()));
+                if (getActivity() == null) {
+                    return;
+                }
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         noInternetTextView.setVisibility(View.INVISIBLE);
                         recipeAdapter.update(recipesList);
+                        updtateIngredientsWidget(Utils.parseJSONIngredients(recipesList.get(0).getIngredients()));
                     }
                 });
             }
@@ -139,11 +147,8 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemCl
     }
 
     private void updtateIngredientsWidget(String ingredients) {
-        SharedPreferences.Editor editor = this.getActivity().
-                getSharedPreferences(this.getActivity().
-                        getString(R.string.prefs), Context.MODE_PRIVATE).edit();
         editor.putString(getString(R.string.ingredients), ingredients);
-        editor.apply();
+        editor.commit();
     }
 
     @Override
@@ -152,4 +157,6 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListItemCl
         intent.putExtra(getString(R.string.intent_recipe_object), recipe);
         startActivity(intent);
     }
+
+
 }

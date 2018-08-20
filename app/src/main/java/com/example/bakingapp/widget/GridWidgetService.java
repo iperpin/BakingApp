@@ -3,6 +3,7 @@ package com.example.bakingapp.widget;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -23,6 +24,7 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     Context context;
     Ingredient[] ingredientsList;
+    private SharedPreferences prefs;
 
     public GridRemoteViewsFactory(Context context) {
         this.context = context;
@@ -30,13 +32,14 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onCreate() {
+        prefs = PreferenceManager
+                .getDefaultSharedPreferences(context);
     }
 
     @Override
     public void onDataSetChanged() {
-        SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.prefs), Context.MODE_PRIVATE);
         String ingredients = prefs.getString(context.getString(R.string.ingredients), "");
-        if (ingredients!=null && !ingredients.equalsIgnoreCase("")) {
+        if (ingredients != null && !ingredients.equalsIgnoreCase("")) {
             Ingredient[] ingredientsList = Utils.parseIngredientsJSON(ingredients);
             this.ingredientsList = ingredientsList;
         }
