@@ -43,6 +43,7 @@ public class VideoFragment extends Fragment implements Player.EventListener {
 
     private static final String TAG = "VideoFragment";
     private static final String VIDEO_POSITION = "VIDEO_POSITION";
+    private static final String VIDEO_STATE = "VIDEO_STATE";
 
     @BindView(R.id.video_player)
     PlayerView playerView;
@@ -55,6 +56,7 @@ public class VideoFragment extends Fragment implements Player.EventListener {
     private PlaybackStateCompat.Builder stateBuilder;
     private static long currentVideoPos;
     private static boolean initialize = false;
+    private boolean currentVideoState;
 
     public VideoFragment() {
 
@@ -64,6 +66,7 @@ public class VideoFragment extends Fragment implements Player.EventListener {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong(VIDEO_POSITION, currentVideoPos);
+        outState.putBoolean(VIDEO_STATE, currentVideoState);
     }
 
     @Nullable
@@ -77,6 +80,7 @@ public class VideoFragment extends Fragment implements Player.EventListener {
 
         if (savedInstanceState != null) {
             currentVideoPos = savedInstanceState.getLong(VIDEO_POSITION, C.TIME_UNSET);
+            currentVideoState = savedInstanceState.getBoolean(VIDEO_STATE,false);
         }
 
         Step step = getArguments().getParcelable(getString(R.string.intent_step_object));
@@ -119,7 +123,7 @@ public class VideoFragment extends Fragment implements Player.EventListener {
         }
 
 
-        player.setPlayWhenReady(true);
+        player.setPlayWhenReady(currentVideoState);
 
 
     }
@@ -222,6 +226,7 @@ public class VideoFragment extends Fragment implements Player.EventListener {
         super.onPause();
         if (player != null) {
             currentVideoPos = player.getCurrentPosition();
+            currentVideoState = player.getPlayWhenReady();
         }
         releasePlayer();
     }
