@@ -1,15 +1,19 @@
 package com.example.bakingapp.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.bakingapp.R;
 import com.example.bakingapp.objects.Step;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,8 +69,27 @@ public class StepsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             StepHolder stepHolder = (StepHolder) holder;
             String shortDescription = steps.get(position - 1).getShortDescription();
             String description = steps.get(position - 1).getDescription();
+            String thumbnail = steps.get(position - 1).getThumbnailURL();
+
             stepHolder.stepDescTv.setText(description);
             stepHolder.stepResumeTv.setText(shortDescription);
+
+            Drawable placeholder = stepHolder.stepIm.getResources().getDrawable(R.drawable.image);
+            Drawable error = stepHolder.stepIm.getResources().getDrawable(R.drawable.cancel);
+
+            if (!thumbnail.isEmpty()) {
+                Picasso.with(stepHolder.stepIm.getContext())
+                        .load(thumbnail)
+                        .placeholder(placeholder)
+                        .error(error)
+                        .into(stepHolder.stepIm);
+            }else{
+                Picasso.with(stepHolder.stepIm.getContext())
+                        .load(R.drawable.image)
+                        .placeholder(placeholder)
+                        .error(error)
+                        .into(stepHolder.stepIm);
+            }
         }
     }
 
@@ -124,11 +147,13 @@ public class StepsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         TextView stepResumeTv;
         TextView stepDescTv;
+        ImageView stepIm;
 
         public StepHolder(View itemView) {
             super(itemView);
             stepResumeTv = itemView.findViewById(R.id.step_resume_tv);
             stepDescTv = itemView.findViewById(R.id.step_desc_tv);
+            stepIm = itemView.findViewById(R.id.step_im);
             itemView.setOnClickListener(this);
         }
 
